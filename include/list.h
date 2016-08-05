@@ -154,7 +154,7 @@ static inline void list_push_front(struct list_head *node, struct list_head *hea
 
 
 /*
- * list_push_bask - add a new node
+ * list_push_back - add a new node
  * node: new node to be added
  * head: list head to add it before
  *
@@ -164,7 +164,7 @@ static inline void list_push_front(struct list_head *node, struct list_head *hea
  * before:  [prev] <-> [head] <-> [next]
  * after:   [prev] <-> [node] <-> [head] <-> [next]
  */
-static inline void list_push_bask(struct list_head *node, struct list_head *head)
+static inline void list_push_back(struct list_head *node, struct list_head *head)
 {
     sys_list_add(node, head->prev, head);
 }
@@ -266,7 +266,7 @@ static inline void list_move_to_back(struct list_head *node,
                                      struct list_head *head)
 {
     sys_list_del_node(node);
-    list_push_bask(node, head);
+    list_push_back(node, head);
 }
 
 
