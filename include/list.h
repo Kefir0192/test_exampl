@@ -105,7 +105,8 @@ static inline size_t list_size(const struct list_head *head)
 {
     size_t size = 0;
     const struct list_head *it;
-    for(it = (head)->next; it != (head); it = it->next, size++)
+    for(it = (head)->next; it != (head); it = it->next)
+        size++;
 
     return size;
 }
