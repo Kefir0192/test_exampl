@@ -104,8 +104,9 @@ static inline int list_is_singular(const struct list_head *head)
 static inline size_t list_size(const struct list_head *head)
 {
     size_t size = 0;
-
-    for(const struct list_head *it = (head)->next; it != (head); it = it->next, size++)
+    const struct list_head *it;
+    for(it = (head)->next; it != (head); it = it->next)
+        size++;
 
     return size;
 }
@@ -154,7 +155,7 @@ static inline void list_push_front(struct list_head *node, struct list_head *hea
 
 
 /*
- * list_push_bask - add a new node
+ * list_push_back - add a new node
  * node: new node to be added
  * head: list head to add it before
  *
@@ -164,7 +165,7 @@ static inline void list_push_front(struct list_head *node, struct list_head *hea
  * before:  [prev] <-> [head] <-> [next]
  * after:   [prev] <-> [node] <-> [head] <-> [next]
  */
-static inline void list_push_bask(struct list_head *node, struct list_head *head)
+static inline void list_push_back(struct list_head *node, struct list_head *head)
 {
     sys_list_add(node, head->prev, head);
 }
@@ -266,7 +267,7 @@ static inline void list_move_to_back(struct list_head *node,
                                      struct list_head *head)
 {
     sys_list_del_node(node);
-    list_push_bask(node, head);
+    list_push_back(node, head);
 }
 
 
