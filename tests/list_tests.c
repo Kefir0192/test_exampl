@@ -131,12 +131,46 @@ int test_list_is_last(struct test_info_t  *test_info)
 
 
 
+int test_list_is_singular(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    struct tmp_data d1, d2;
+
+
+
+    if(list_is_singular(&tmp_list))         //list must be empty (not singular)
+        return TEST_BROKEN;
+
+
+    list_push_front(&d1.list, &tmp_list);   //now d1 is first
+
+    if(!list_is_singular(&tmp_list))        //list must be singular (in list only d1)
+        return TEST_BROKEN;
+
+
+
+    list_push_back(&d2.list, &tmp_list);    //now d2 is last
+
+    if(list_is_singular(&tmp_list))         //list dont must be singular (in list d1,d2)
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
 ptest_func tests[] =
 {
 
     test_list_empty,
     test_list_is_first,
     test_list_is_last,
+    test_list_is_singular,
 
 };
 
