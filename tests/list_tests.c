@@ -344,6 +344,73 @@ int test_list_move_to_back(struct test_info_t  *test_info)
 
 
 
+int test_list_rotate_left(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    struct tmp_data d1, d2, d3, d4;
+
+
+    //add
+    list_push_front(&d4.list, &tmp_list);
+    list_push_front(&d3.list, &tmp_list);
+    list_push_front(&d2.list, &tmp_list);
+    list_push_front(&d1.list, &tmp_list);      // [head] <-> [d1] <-> [d2] <-> [d3] <-> [d4]
+
+
+
+    list_rotate_left(&tmp_list);               //[d1] <-> [head] <-> [d2] <-> [d3] <-> [d4]
+
+
+    if(!list_is_last(&d1.list, &tmp_list))     //d1 last
+        return TEST_BROKEN;
+
+    if(!list_is_first(&d2.list, &tmp_list))    //d2 is first
+        return TEST_BROKEN;
+
+
+
+    list_rotate_left(&tmp_list);               // [d1] <-> [d2] <-> [head] <-> [d3] <-> [d4]
+
+
+    if(!list_is_last(&d2.list, &tmp_list))     //d2 last
+        return TEST_BROKEN;
+
+    if(!list_is_first(&d3.list, &tmp_list))    //d3 is first
+        return TEST_BROKEN;
+
+
+
+    list_rotate_left(&tmp_list);               // [d1] <-> [d2] <-> [d3] <-> [head] <-> [d4]
+
+
+    if(!list_is_last(&d3.list, &tmp_list))     //d3 last
+        return TEST_BROKEN;
+
+    if(!list_is_first(&d4.list, &tmp_list))    //d4 is first
+        return TEST_BROKEN;
+
+
+
+    list_rotate_left(&tmp_list);               // [d2] <-> [d3] <-> [d4] <-> [head] <-> [d1]
+
+
+    if(!list_is_last(&d4.list, &tmp_list))     //d4 last
+        return TEST_BROKEN;
+
+    if(!list_is_first(&d1.list, &tmp_list))    //d1 is first
+        return TEST_BROKEN;
+
+
+
+    return TEST_PASSED;
+}
+
+
+
 ptest_func tests[] =
 {
 
@@ -355,6 +422,7 @@ ptest_func tests[] =
     test_list_replace_init,
     test_list_move_to_front,
     test_list_move_to_back,
+    test_list_rotate_left,
 
 };
 
