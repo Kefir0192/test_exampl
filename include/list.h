@@ -503,6 +503,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_riter - reverse iterate over list of given type
+ *
  * it:     the &struct data to use as a loop cursor(iterator).
  * head:   the &list_head to take the element from.
  * tmp_it: another &struct list_head to use as temporary cursor(iterator)
@@ -513,6 +514,31 @@ static inline void list_rotate_right(struct list_head *head)
     for (it = list_data((head)->prev, type, member), tmp_it = it->member.prev; \
          &it->member != (head);                                                \
          it = list_data(tmp_it, type, member), tmp_it = it->member.prev)
+
+
+
+
+
+//---------------- Algorithm ----------------
+
+
+
+
+
+/*
+ * list_for_each - Applies function fn to each of the elements in the range [first,last)
+ *
+ * first, last is Input iterators to the initial and final positions in a sequence.
+ * The range used is [first,last), which contains all the elements
+ * between first and last, including the element pointed by first
+ * but not the element pointed by last.
+ *
+ * first:  the &list_head to use as a loop cursor(iterator).
+ * last:   the &list_head to use as a last element.
+ * fn:     Unary function that accepts an element in the range as argument.
+ */
+#define list_for_each(first, last, fn)  \
+    for( ; first != last; fn(first), first = first->next);
 
 
 
