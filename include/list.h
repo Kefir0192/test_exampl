@@ -538,8 +538,7 @@ static inline void list_rotate_right(struct list_head *head)
  * fn:     Unary function that accepts an element in the range as argument.
  */
 #define list_for_each(first, last, fn)  \
-    for( ; first != last; fn(first), first = first->next);
-
+    for(; first != last; fn(first), first = first->next);
 
 
 
