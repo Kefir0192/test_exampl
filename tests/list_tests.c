@@ -592,6 +592,41 @@ int test_list_last_data(struct test_info_t  *test_info)
 
 
 
+//---------------- Iterator ----------------
+
+
+
+int test_list_citer(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct list_head *it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+        list_push_back(&nodes[i].list, &tmp_list);
+
+
+    i=0;
+    list_citer(it, &tmp_list)
+    {
+        if( it != &nodes[i].list )  //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
 ptest_func tests[] =
 {
 
@@ -610,7 +645,10 @@ ptest_func tests[] =
     test_list_data,
     test_list_data_or_null,
     test_list_first_data,
-    test_list_last_data
+    test_list_last_data,
+
+    //Iterator
+    test_list_citer,
 
 };
 
