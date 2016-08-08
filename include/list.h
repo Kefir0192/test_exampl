@@ -13,6 +13,93 @@
 
 /*
  * Simple Circular doubly linked lists implementation.
+ *
+ * Definitions and designations:
+ *
+ *
+ *   next: ->
+ *   prev: <-
+ *
+ *
+ *   empty list:
+ *       ______
+ *      |      |
+ *   -->| head |<--
+ *   |  |______|  |
+ *   |            |
+ *   |____________|
+ *
+ *
+ *
+ *   list with nodes:
+ *       ______     _______     _______
+ *      |      |   |       |   |       |
+ *   -->| head |<->| node0 |<->| node1 |<--
+ *   |  |______|   |_______|   |_______|  |
+ *   |                                    |
+ *   |____________________________________|
+ *
+ *
+ *
+ * Node - a data structure (payloads) in which one of the fields is
+ * a variable of type list_head.
+ *
+ * example:
+ *
+ * struct tmp_data
+ * {
+ *    struct list_head list;
+ *    int              data;
+ * };
+ *
+ *
+ * node* - a pointer to a Node, which is a pointer == pointer to
+ * member (list_head) within the struct of data.
+ *
+ * If a member(list_head) in data structure (payloads) is
+ * the first member (offset == 0) then the Node* == node*
+ *
+ * To get pointer to data structure(payloads), if you have a pointer to a node,
+ * use the function: list_data
+ *
+ *
+ *  Algorithmic complexity:
+ *
+ *  list_size            -     O(n)
+ *  list_empty           -     O(1)  use it for check
+ *  list_is_first        -     O(1)
+ *  list_is_last         -     O(1)
+ *  list_is_singular     -     O(1)
+ *
+ *  list_push_front      -     O(1)
+ *  list_push_back       -     O(1)
+ *  list_del             -     O(1)
+ *  list_replace         -     O(1)
+ *  list_replace_init    -     O(1)
+ *  list_move_to_front   -     O(1)
+ *  list_move_to_back    -     O(1)
+ *  list_rotate_left     -     O(1)
+ *  list_rotate_right    -     O(1)
+ *
+ *  //Get Data from node
+ *  list_data            -     O(1)
+ *  list_data_or_null    -     O(1)
+ *  list_first_data      -     O(1)
+ *  list_last_data       -     O(1)
+ *
+ *  //Iterator
+ *  list_citer           -     O(n)
+ *  list_criter          -     O(n)
+ *  list_iter            -     O(n)
+ *  list_riter           -     O(n)
+ *  list_data_citer      -     O(n)
+ *  list_data_criter     -     O(n)
+ *  list_data_iter       -     O(n)
+ *  list_data_riter      -     O(n)
+ *
+ *  //Algorithm
+ *  list_for_each        -     O(n)
+ *
  */
 
 
@@ -21,7 +108,8 @@
 
 struct list_head
 {
-    struct list_head *next, *prev;
+    struct list_head *next;
+    struct list_head *prev;
 };
 
 
@@ -45,7 +133,10 @@ static inline void list_init_head(struct list_head *list)
 
 /*
  * list_empty - tests whether a list is empty
+ *
  * head: the list to test.
+ *
+ * ret: true if the container size is 0 false otherwise.
  */
 static inline int list_empty(const struct list_head *head)
 {
@@ -56,11 +147,12 @@ static inline int list_empty(const struct list_head *head)
 
 /*
  * list_is_first - tests whether node is the first node in list head
+ *
  * node: the node to test
  * head: the head of the list
  *
- *  ret: 1   // if [...] <-> [head] <-> [node] <-> [...]
- *  ret: 0   // else
+ *  ret: true   // if [...] <-> [head] <-> [node] <-> [...]
+ *  ret: false  // else
  */
 static inline int list_is_first(const struct list_head *node,
                                 const struct list_head *head)
@@ -72,11 +164,12 @@ static inline int list_is_first(const struct list_head *node,
 
 /*
  * list_is_last - tests whether node is the last node in list head
+ *
  * node: the node to test
  * head: the head of the list
  *
- *  ret: 1   // if [...] <-> [node] <-> [head] <-> [...]
- *  ret: 0   // else
+ *  ret: true   // if [...] <-> [node] <-> [head] <-> [...]
+ *  ret: false  // else
  */
 static inline int list_is_last(const struct list_head *node,
                                const struct list_head *head)
@@ -88,7 +181,10 @@ static inline int list_is_last(const struct list_head *node,
 
 /*
  * list_is_singular - tests whether a list has just one node.
+ *
  * head: the list to test.
+ *
+ * ret: true if the container size is 1 false otherwise.
  */
 static inline int list_is_singular(const struct list_head *head)
 {
@@ -99,6 +195,7 @@ static inline int list_is_singular(const struct list_head *head)
 
 /*
  * list_size - Returns the number of elements in the list container.
+ *
  * head: the list to test.
  */
 static inline size_t list_size(const struct list_head *head)
@@ -137,6 +234,7 @@ static inline void sys_list_add(struct list_head *node,
 
 /*
  * list_push_front - add a new node
+ *
  * node: new node to be added
  * head: list head to add it after
  *
@@ -156,6 +254,7 @@ static inline void list_push_front(struct list_head *node, struct list_head *hea
 
 /*
  * list_push_back - add a new node
+ *
  * node: new node to be added
  * head: list head to add it before
  *
@@ -189,9 +288,11 @@ static inline void sys_list_del(struct list_head *prev, struct list_head *next)
 
 /*
  * sys_list_del_node - deletes node from list.
+ *
  * node: the element to delete from the list.
+ *
  * Note: list_empty() on node does not return true after this,
- * the node is in an undefined state.
+ *       the node is in an undefined state.
  *
  * before:  [prev] <-> [node] <-> [next]
  * after:   [prev] <-> [next];              old_val <- [node] -> old_val
@@ -205,7 +306,9 @@ static inline void sys_list_del_node(struct list_head *node)
 
 /*
  * list_del - deletes node from list.
+ *
  * node: the element to delete from the list.
+ *
  * Note: list_empty() on node does return true after this
  *
  * before:  [prev] <-> [node] <-> [next]
@@ -221,6 +324,7 @@ static inline void list_del(struct list_head *node)
 
 /*
  * list_replace - replace old node by new node
+ *
  * old_node: the element to be replaced
  * new_node: the new element to insert
  *
@@ -246,6 +350,7 @@ static inline void list_replace_init(struct list_head *old_node,
 
 /*
  * list_move_to_front - delete from one list and add as another's head
+ *
  * node: the node to move
  * head: the head that will precede our node
  */
@@ -260,6 +365,7 @@ static inline void list_move_to_front(struct list_head *node,
 
 /*
  * list_move_to_back - delete from one list and add as another's tail
+ *
  * node: the node to move
  * head: the head that will follow our node
  */
@@ -274,6 +380,7 @@ static inline void list_move_to_back(struct list_head *node,
 
 /*
  * list_rotate_left - rotate the list to the left
+ *
  * head: the head of the list
  *
  * before:  [...] <-> [nodeN] <-> [head]  <-> [node1] <-> [node2]  <-> [...]
@@ -294,6 +401,7 @@ static inline void list_rotate_left(struct list_head *head)
 
 /*
  * list_rotate_right - rotate the list to the right
+ *
  * head: the head of the list
  *
  * before:  [...] <-> [nodeN] <-> [head]  <-> [node1] <-> [node2] <-> [...]
@@ -322,6 +430,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data - get the struct (data) for this node
+ *
  * node:   the node.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -333,6 +442,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_or_null - get the struct (data) for this node
+ *
  * node:   the node.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -346,6 +456,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_first_data - get the first struct (data) from a list
+ *
  * head:   the list head to take the element from.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -359,6 +470,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_last_data - get the last struct (data) from a list
+ *
  * head:   the list head to take the element from.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -372,6 +484,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_first_data_or_null - get the first struct (data) from a list
+ *
  * head:   the list head to take the element from.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -385,6 +498,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_last_data_or_null - get the last struct (data) from a list
+ *
  * head:   the list head to take the element from.
  * type:   the type of the struct of data this is embedded in.
  * member: the name of the node(list_head) within the struct of data.
@@ -406,6 +520,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_citer - constant iterate over a list
+ *
  * it:    the &struct list_head to use as a loop cursor(iterator).
  * head:  the head for your list.
  *
@@ -419,6 +534,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_criter - constant revers iterate over a list
+ *
  * it:    the &struct list_head to use as a loop cursor(iterator).
  * head:  the head for your list.
  *
@@ -431,6 +547,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_iter - iterate over a list safe against removal of list node
+ *
  * it:     the &struct list_head to use as a loop cursor(iterator).
  * tmp_it: another &struct list_head to use as temporary cursor(iterator)
  * head:   the head for your list.
@@ -443,6 +560,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_riter - reverse iterate over a list safe against removal of list node
+ *
  * it:     the &struct list_head to use as a loop cursor(iterator).
  * tmp_it: another &struct list_head to use as temporary cursor(iterator)
  * head:   the head for your list.
@@ -456,6 +574,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_citer - constant iterate over list of given type (data)
+ *
  * it:     the &struct data to use as a loop cursor(iterator).
  * head:   the &list_head to take the element from.
  * type:   the type of the struct of data this is embedded in.
@@ -472,6 +591,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_criter - constant reverse iterate over list of given type (data)
+ *
  * it:     the &struct data to use as a loop cursor(iterator).
  * head:   the &list_head to take the element from.
  * type:   the type of the struct of data this is embedded in.
@@ -488,6 +608,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_iter - iterate over list of given type
+ *
  * it:     the &struct data to use as a loop cursor(iterator).
  * head:   the &list_head to take the element from.
  * tmp_it: another &struct list_head to use as temporary cursor(iterator)
@@ -503,6 +624,7 @@ static inline void list_rotate_right(struct list_head *head)
 
 /*
  * list_data_riter - reverse iterate over list of given type
+ *
  * it:     the &struct data to use as a loop cursor(iterator).
  * head:   the &list_head to take the element from.
  * tmp_it: another &struct list_head to use as temporary cursor(iterator)
@@ -513,6 +635,31 @@ static inline void list_rotate_right(struct list_head *head)
     for (it = list_data((head)->prev, type, member), tmp_it = it->member.prev; \
          &it->member != (head);                                                \
          it = list_data(tmp_it, type, member), tmp_it = it->member.prev)
+
+
+
+
+
+//---------------- Algorithm ----------------
+
+
+
+
+
+/*
+ * list_for_each - Applies function fn to each of the elements in the range [first,last)
+ *
+ * first, last is Input iterators to the initial and final positions in a sequence.
+ * The range used is [first,last), which contains all the elements
+ * between first and last, including the element pointed by first
+ * but not the element pointed by last.
+ *
+ * first:  the &list_head to use as a loop cursor(iterator)
+ * last:   the &list_head to use as a last element.
+ * fn:     Unary function that accepts an element in the range as argument.
+ */
+#define list_for_each(first, last, fn)  \
+    for(; first != last; fn(first), first = first->next);
 
 
 

@@ -478,6 +478,504 @@ int test_list_rotate_right(struct test_info_t  *test_info)
 
 
 
+//---------------- Get Data from node ----------------
+
+
+
+int test_list_data(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    struct tmp_data d1;
+
+    if( list_data(&d1.list, struct tmp_data, list) != &d1 )
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_or_null(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    struct tmp_data d1;
+
+    list_init_head(&d1.list);
+
+
+    if( list_data_or_null(&d1.list, struct tmp_data, list) != NULL )
+        return TEST_BROKEN;
+
+
+    list_push_front(&d1.list, &tmp_list);
+
+
+    if( list_data_or_null(&d1.list, struct tmp_data, list) != &d1 )
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_first_data(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    struct tmp_data d1, d2;
+
+
+    list_push_front(&d1.list, &tmp_list);
+
+
+    if( list_first_data(&tmp_list, struct tmp_data, list) != &d1 )
+        return TEST_BROKEN;
+
+
+    list_push_front(&d2.list, &tmp_list);
+
+
+    if( list_first_data(&tmp_list, struct tmp_data, list) != &d2 )
+        return TEST_BROKEN;
+
+
+    if( list_first_data(&tmp_list, struct tmp_data, list) == &d1 ) //now d2 first
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_last_data(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    struct tmp_data d1, d2;
+
+
+    list_push_back(&d1.list, &tmp_list);
+
+
+    if( list_last_data(&tmp_list, struct tmp_data, list) != &d1 )
+        return TEST_BROKEN;
+
+
+    list_push_back(&d2.list, &tmp_list);
+
+
+    if( list_last_data(&tmp_list, struct tmp_data, list) != &d2 )
+        return TEST_BROKEN;
+
+
+    if( list_last_data(&tmp_list, struct tmp_data, list) == &d1 ) //now d2 last
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+//---------------- Iterator ----------------
+
+
+
+int test_list_citer(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct list_head *it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+        list_push_back(&nodes[i].list, &tmp_list);
+
+
+    i=0;
+    list_citer(it, &tmp_list)
+    {
+        if( it != &nodes[i].list )  //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_criter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct list_head *it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+        list_push_front(&nodes[i].list, &tmp_list);
+
+
+    i=0;
+    list_criter(it, &tmp_list)
+    {
+        if( it != &nodes[i].list )  //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_iter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct list_head *it;
+    struct list_head *tmp_it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+        list_push_back(&nodes[i].list, &tmp_list);
+
+
+    if( list_size(&tmp_list) != COUNT_NODES )
+        return TEST_BROKEN;
+
+
+    i=0;
+    list_iter(it, tmp_it, &tmp_list)   //dont change
+    {
+        if( it != &nodes[i].list )     //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    i=0;
+    list_iter(it, tmp_it, &tmp_list)   //+ change (del)
+    {
+        if(i & 1)
+            list_del(it);
+        i++;
+    }
+
+    if( list_size(&tmp_list) != (COUNT_NODES/2) )
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_riter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct list_head *it;
+    struct list_head *tmp_it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+        list_push_front(&nodes[i].list, &tmp_list);
+
+
+    if( list_size(&tmp_list) != COUNT_NODES )
+        return TEST_BROKEN;
+
+
+    i=0;
+    list_riter(it, tmp_it, &tmp_list)   //dont change
+    {
+        if( it != &nodes[i].list )      //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    i=0;
+    list_riter(it, tmp_it, &tmp_list)   //+ change (del)
+    {
+        if(i & 1)
+            list_del(it);
+        i++;
+    }
+
+    if( list_size(&tmp_list) != (COUNT_NODES/2) )
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_citer(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct tmp_data *it;
+
+
+
+    for(i=0; i < COUNT_NODES; i++)
+    {
+        nodes[i].data = i;
+        list_push_back(&nodes[i].list, &tmp_list);
+    }
+
+
+
+    i=0;
+    list_data_citer(it, &tmp_list, struct tmp_data, list)
+    {
+        if( it->data != nodes[i].data )     //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_criter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data nodes[COUNT_NODES];
+    struct tmp_data *it;
+
+
+
+    for(i=0; i < COUNT_NODES; i++)
+    {
+        nodes[i].data = i;
+        list_push_front(&nodes[i].list, &tmp_list);
+    }
+
+
+
+    i=0;
+    list_data_criter(it, &tmp_list, struct tmp_data, list)
+    {
+        if( it->data != nodes[i].data )     //test nodes
+            return TEST_BROKEN;
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_iter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data  nodes[COUNT_NODES];
+    struct tmp_data  *it;
+    struct list_head *tmp_it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+    {
+        nodes[i].data = i;
+        list_push_back(&nodes[i].list, &tmp_list);
+    }
+
+
+    i=0;
+    list_data_iter(it, &tmp_list, tmp_it, struct tmp_data, list)   //+ change (del)
+    {
+        if(i & 1)
+            list_del(&it->list);
+        i++;
+    }
+
+
+    if( list_size(&tmp_list) != (COUNT_NODES/2) )
+        return TEST_BROKEN;
+
+
+    i=0;
+    list_data_citer(it, &tmp_list, struct tmp_data, list)
+    {
+        if(it->data != i)
+            return TEST_BROKEN;
+
+        i+= 2;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_riter(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data  nodes[COUNT_NODES];
+    struct tmp_data  *it;
+    struct list_head *tmp_it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+    {
+        nodes[i].data = i;
+        list_push_front(&nodes[i].list, &tmp_list);
+    }
+
+
+    i=0;
+    list_data_riter(it, &tmp_list, tmp_it, struct tmp_data, list)   //+ change (del)
+    {
+        if(i & 1)
+            list_del(&it->list);
+        i++;
+    }
+
+
+    if( list_size(&tmp_list) != (COUNT_NODES/2) )
+        return TEST_BROKEN;
+
+
+    i=0;
+    list_data_criter(it, &tmp_list, struct tmp_data, list)
+    {
+        if(it->data != i)
+            return TEST_BROKEN;
+
+        i+= 2;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
+//---------------- Algorithm ----------------
+
+
+
+void node_inc(struct list_head *it)
+{
+    struct tmp_data *data = list_data(it, struct tmp_data, list);
+
+    data->data++;
+}
+
+
+int test_list_for_each(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
+    DECLARE_LIST_HEAD(tmp_list);
+
+    const size_t COUNT_NODES = 100;
+    size_t i;
+    struct tmp_data  nodes[COUNT_NODES];
+    struct tmp_data  *it_data;
+    struct list_head *it;
+
+
+    for(i=0; i < COUNT_NODES; i++)
+    {
+        nodes[i].data = i;
+        list_push_back(&nodes[i].list, &tmp_list);
+    }
+
+
+    it = tmp_list.next;
+    list_for_each(it, &tmp_list, node_inc);
+
+
+    i=0;
+    list_data_citer(it_data, &tmp_list, struct tmp_data, list)
+    {
+        if( it_data->data != (i+1) )
+            return TEST_BROKEN;
+
+        i++;
+    }
+
+
+    return TEST_PASSED;
+}
+
+
+
 ptest_func tests[] =
 {
 
@@ -492,6 +990,24 @@ ptest_func tests[] =
     test_list_rotate_left,
     test_list_rotate_right,
 
+    //Get Data from node
+    test_list_data,
+    test_list_data_or_null,
+    test_list_first_data,
+    test_list_last_data,
+
+    //Iterator
+    test_list_citer,
+    test_list_criter,
+    test_list_iter,
+    test_list_riter,
+    test_list_data_citer,
+    test_list_data_criter,
+    test_list_data_iter,
+    test_list_data_riter,
+
+    //Algorithm
+    test_list_for_each
 };
 
 
