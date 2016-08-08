@@ -487,11 +487,37 @@ int test_list_data(struct test_info_t  *test_info)
 
     TEST_INIT;
 
+    struct tmp_data d1;
+
+    if( list_data(&d1.list, struct tmp_data, list) != &d1 )
+        return TEST_BROKEN;
+
+
+    return TEST_PASSED;
+}
+
+
+
+int test_list_data_or_null(struct test_info_t  *test_info)
+{
+
+    TEST_INIT;
+
     DECLARE_LIST_HEAD(tmp_list);
 
     struct tmp_data d1;
 
-    if( list_data(&d1.list, struct tmp_data, list) != &d1 )
+    list_init_head(&d1.list);
+
+
+    if( list_data_or_null(&d1.list, struct tmp_data, list) != NULL )
+        return TEST_BROKEN;
+
+
+    list_push_front(&d1.list, &tmp_list);
+
+
+    if( list_data_or_null(&d1.list, struct tmp_data, list) != &d1 )
         return TEST_BROKEN;
 
 
@@ -515,7 +541,8 @@ ptest_func tests[] =
     test_list_rotate_right,
 
     //Get Data from node
-    test_list_data
+    test_list_data,
+    test_list_data_or_null
 
 };
 
