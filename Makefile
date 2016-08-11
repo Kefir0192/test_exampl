@@ -16,15 +16,6 @@ export
  
 
 
-.PHONY: get_list_obj
-get_list_obj:
-	@rm -f $(OBJ_LIST)
-	@for m in $(MODULES); do \
-          $(MAKE) -C $$m; \
-    done
-
-
-
 OBJ = $(shell cat $(OBJ_LIST))
 
 .PHONY: all
@@ -38,10 +29,21 @@ clean:
 
 
 
+.PHONY: get_list_obj
+get_list_obj:
+	@rm -f $(OBJ_LIST)
+	@for m in $(MODULES); do \
+          $(MAKE) -C $$m; \
+    done
+
+
+
 .PHONY: link
 link:
 	@rm -f kernel
 	$(CROSS_COMPILE) $(OBJ) -o kernel
+
+
 
 
 
