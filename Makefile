@@ -31,7 +31,7 @@ clean:
 
 .PHONY: get_list_obj
 get_list_obj:
-	@rm -f $(OBJ_LIST)
+	@echo "" > $(OBJ_LIST)
 	@for m in $(MODULES); do \
           $(MAKE) -C $$m; \
     done
