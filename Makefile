@@ -12,8 +12,8 @@ MODULES   = $(CURDIR)/include
 MODULES  += $(CURDIR)/arch/$(ARCH)
 
 
-
-OBJ_LIST  = $(CURDIR)/objects.txt
+BUILD_DIR = $(CURDIR)/build
+OBJ_LIST  = $(BUILD_DIR)/objects.txt
 
 
 
@@ -30,8 +30,8 @@ export
 
  
 
-
 OBJ = $(shell cat $(OBJ_LIST))
+
 
 .PHONY: all
 all: clean get_list_obj $(OBJ) link
@@ -41,6 +41,7 @@ all: clean get_list_obj $(OBJ) link
 .PHONY: clean
 clean:
 	@rm -f $(OBJ)
+	@rm -f $(BUILD_DIR)/*
 
 
 
@@ -55,9 +56,8 @@ get_list_obj:
 
 .PHONY: link
 link:
-	@rm -f kernel
-	$(CROSS_COMPILE) $(OBJ) -o kernel
-
+	@rm -f $(BUILD_DIR)/kernel
+	$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
 
 
 
