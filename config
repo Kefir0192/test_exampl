@@ -1,21 +1,7 @@
 ARCH           = ARM_CM3
 CROSS_COMPILE  = gcc
 
-
-INCLUDE_DIR    = $(CURDIR)/include
-INCLUDE_DIR   += $(CURDIR)/arch/$(ARCH)
-
 CFLAGS         = -O2  -s  -Wall
-CFLAGS        += $(addprefix -I, $(INCLUDE_DIR))
 
-
-
-OBJ_LIST       = $(CURDIR)/objects.txt
-
-
-
-#core
-MODULES   = $(CURDIR)/include
-MODULES  += $(CURDIR)/arch/$(ARCH)
 
 #drivers

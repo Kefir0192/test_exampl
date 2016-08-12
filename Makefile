@@ -1,14 +1,29 @@
 include config
 
 
+INCLUDE_DIR   = $(CURDIR)/include
+INCLUDE_DIR  += $(CURDIR)/arch/$(ARCH)
+
+CFLAGS       += $(addprefix -I, $(INCLUDE_DIR))
+
+
+#core
+MODULES   = $(CURDIR)/include
+MODULES  += $(CURDIR)/arch/$(ARCH)
 
 
 
+OBJ_LIST  = $(CURDIR)/objects.txt
+
+
+
+# function for add objects to OBJ_LIST
 # $$1 - Dir  $$2 - list of objects
 to_obj_list = \
     for obj in $$2; do \
         echo  $$1/$$$$obj >> $(OBJ_LIST); \
     done
+
 
 export
 
