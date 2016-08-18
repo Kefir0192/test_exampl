@@ -51,6 +51,6 @@ B. Список полезный ссылок:
 		7. FreeRTOS: практическое применение, часть 6 (устранение проблем)
 		   http://microsin.net/programming/arm/freertos-part6.html
 		   
-		8. hFreeRTOS: практическое применение, дополнения, словарик
-		   ttp://microsin.net/programming/arm/freertos-appendix.html
+		8. FreeRTOS: практическое применение, дополнения, словарик
+		   http://microsin.net/programming/arm/freertos-appendix.html
 
