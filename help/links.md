@@ -10,6 +10,13 @@
 
 5. [Легкие потоки в Embox](https://habrahabr.ru/company/embox/blog/256565/)
 
+6. [ULE: A Modern Scheduler For FreeBSD](http://hup.hu/old/stuff/freebsd/ULE.pdf)
+
+7. [O(1) scheduler](https://en.wikipedia.org/wiki/O%281%29_scheduler)
+
+8. [ОС - 3. Планирование процессов.](http://volgota.com/yaroslavz/os-3-planirovanie-processov)
+
+9. [Основные понятия планирования процессов](https://moodle.kstu.ru/mod/page/view.php?id=55)
 
 
 ## FreeRTOS:
@@ -29,6 +36,24 @@
 7. [FreeRTOS: практическое применение, часть 6 (устранение проблем)](http://microsin.net/programming/arm/freertos-part6.html)
 
 8. [FreeRTOS: практическое применение, дополнения, словарик](http://microsin.net/programming/arm/freertos-appendix.html)
+
+
+
+## Libs:
+
+1. [Glib](https://git.gnome.org/browse/glib/tree/glib)
+
+
+
+## Алгоритмы и структуры данных:
+
+1. [List](https://en.wikipedia.org/wiki/Linked_list)
+
+
+
+## Лайфхаки:
+
+1. [Применение специальных возможностей GCC в ядре Linux](http://www.ibm.com/developerworks/ru/library/l-gcc-hacks/)
 
 
 
