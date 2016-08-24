@@ -1,15 +1,15 @@
 include config
 
 
-INCLUDE_DIR   = $(CURDIR)/include
-INCLUDE_DIR  += $(CURDIR)/arch/$(ARCH)
+INCLUDE_DIR   = $(CURDIR)/src/kernel
+INCLUDE_DIR  += $(CURDIR)/src/arch/$(ARCH)
 
 CFLAGS       += $(addprefix -I, $(INCLUDE_DIR))
 
 
 #core
-MODULES   = $(CURDIR)/include
-MODULES  += $(CURDIR)/arch/$(ARCH)
+MODULES   = $(CURDIR)/src/kernel
+MODULES  += $(CURDIR)/src/arch/$(ARCH)
 
 
 BUILD_DIR = $(CURDIR)/build
@@ -41,7 +41,6 @@ all: clean get_list_obj $(OBJ) link
 .PHONY: clean
 clean:
 	@rm -f $(OBJ)
-	@rm -f $(BUILD_DIR)/*
 
 
 
@@ -57,16 +56,18 @@ get_list_obj:
 .PHONY: link
 link:
 	@rm -f $(BUILD_DIR)/kernel
-	$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
-
+	@echo "Link: $@"
+	@$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
 
 
 
 %.o: %.c
-	$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
+	@echo "Compiled: $@"
+	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
 
 
 %.o: %.S
-	$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
+	@echo "Compiled: $@"
+	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
