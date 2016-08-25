@@ -56,18 +56,18 @@ get_list_obj:
 .PHONY: link
 link:
 	@rm -f $(BUILD_DIR)/kernel
-	@echo "Link: $@"
+	@echo "Link: Kernel"
 	@$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
 
 
 
-%.o: %.c
+%.o:: %.c
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
 
 
-%.o: %.S
+%.o:: %.S
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
