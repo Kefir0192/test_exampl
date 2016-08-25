@@ -41,6 +41,7 @@ all: clean get_list_obj $(OBJ) link
 .PHONY: clean
 clean:
 	@rm -f $(OBJ)
+	$(MAKE) -C ./tests clean
 
 
 
@@ -58,6 +59,12 @@ link:
 	@rm -f $(BUILD_DIR)/kernel
 	@echo "Link: Kernel"
 	@$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
+
+
+
+.PHONY: tests
+tests:
+	$(MAKE) -C ./tests all
 
 
 
