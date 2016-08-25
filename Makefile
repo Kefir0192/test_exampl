@@ -79,17 +79,17 @@ link:
 
 
 # list of tests for build
-TESTS  = $(shell cd ./tests && ls -d */)
+TESTS  = $(shell cd ./tests && ls -d test_*)
 
 
 .PHONY: $(TESTS)
 $(TESTS):
-	$(MAKE) -C ./tests $(TESTS)
+	$(MAKE) -C ./tests $@
 
 
 
-.PHONY: tests
-tests:
+.PHONY: all_tests
+all_tests:
 	$(MAKE) -C ./tests all
 
 
