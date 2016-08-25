@@ -41,6 +41,7 @@ all: clean get_list_obj $(OBJ) link
 .PHONY: clean
 clean:
 	@rm -f $(OBJ)
+	$(MAKE) -C ./tests clean
 
 
 
@@ -56,18 +57,36 @@ get_list_obj:
 .PHONY: link
 link:
 	@rm -f $(BUILD_DIR)/kernel
-	@echo "Link: $@"
+	@echo "Link: Kernel"
 	@$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
 
 
 
-%.o: %.c
+%.o:: %.c
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
 
 
-%.o: %.S
+%.o:: %.S
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
+
+
+
+
+# list of tests for build
+TESTS  = $(shell cd ./tests && ls -d */)
+
+
+.PHONY: $(TESTS)
+$(TESTS):
+	$(MAKE) -C ./tests $(TESTS)
+
+
+
+.PHONY: tests
+tests:
+	$(MAKE) -C ./tests all
+
 
