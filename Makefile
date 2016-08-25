@@ -25,12 +25,15 @@ to_obj_list = \
     done
 
 
+COMMON_OBJ = $(shell cat $(OBJ_LIST))
+OBJ        = $(CURDIR)/src/kernel/main.o
+OBJ       += $(COMMON_OBJ)
+
+
+
 export
-
-
  
 
-OBJ = $(shell cat $(OBJ_LIST))
 
 
 .PHONY: all
