@@ -25,7 +25,7 @@ to_obj_list = \
     done
 
 
-COMMON_OBJ = $(shell cat $(OBJ_LIST))
+COMMON_OBJ = $(shell cat $(OBJ_LIST) 2>/dev/null)
 OBJ        = $(CURDIR)/src/kernel/main.o
 OBJ       += $(COMMON_OBJ)
 
