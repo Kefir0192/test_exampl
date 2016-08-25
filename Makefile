@@ -62,12 +62,6 @@ link:
 
 
 
-.PHONY: tests
-tests:
-	$(MAKE) -C ./tests all
-
-
-
 %.o:: %.c
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
@@ -77,4 +71,22 @@ tests:
 %.o:: %.S
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
+
+
+
+
+# list of tests for build
+TESTS  = $(shell cd ./tests && ls -d */)
+
+
+.PHONY: $(TESTS)
+$(TESTS):
+	$(MAKE) -C ./tests $(TESTS)
+
+
+
+.PHONY: tests
+tests:
+	$(MAKE) -C ./tests all
+
 

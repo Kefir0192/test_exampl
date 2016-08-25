@@ -1,11 +1,11 @@
 CFLAGS  += -I$(CURDIR)
 
-export
+
 
 
 
 # list of tests for build
-TESTS  = list_test
+TESTS  = $(shell ls -d */)
 
 
 
