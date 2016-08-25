@@ -5,7 +5,7 @@ CFLAGS  += -I$(CURDIR)
 
 
 # list of tests for build
-TESTS  = $(shell ls -d */)
+TESTS  = $(shell ls -d test_*)
 
 
 
@@ -24,9 +24,7 @@ clean:
 
 .PHONY: $(TESTS)
 $(TESTS):
-	@for test in $(TESTS); do \
-        $(MAKE) -C $$test; \
-	    echo "  ---- Compiled $@ ----"; \
-	    echo ""; \
-    done
+	$(MAKE) -C $@
+	@echo "  ---- Compiled $@ ----"
+	@echo ""
 
