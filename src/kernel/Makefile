@@ -1,5 +1,5 @@
 
-OBJ = main.o
+OBJ =
 
 
 

@@ -25,12 +25,15 @@ to_obj_list = \
     done
 
 
+COMMON_OBJ = $(shell cat $(OBJ_LIST) 2>/dev/null)
+OBJ        = $(CURDIR)/src/kernel/main.o
+OBJ       += $(COMMON_OBJ)
+
+
+
 export
-
-
  
 
-OBJ = $(shell cat $(OBJ_LIST))
 
 
 .PHONY: all
@@ -41,6 +44,7 @@ all: clean get_list_obj $(OBJ) link
 .PHONY: clean
 clean:
 	@rm -f $(OBJ)
+	$(MAKE) -C ./tests clean
 
 
 
@@ -56,18 +60,36 @@ get_list_obj:
 .PHONY: link
 link:
 	@rm -f $(BUILD_DIR)/kernel
-	@echo "Link: $@"
+	@echo "Link: Kernel"
 	@$(CROSS_COMPILE) $(OBJ) -o $(BUILD_DIR)/kernel
 
 
 
-%.o: %.c
+%.o:: %.c
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
 
 
 
-%.o: %.S
+%.o:: %.S
 	@echo "Compiled: $@"
 	@$(CROSS_COMPILE) $(CFLAGS) -c $< -o $@
+
+
+
+
+# list of tests for build
+TESTS  = $(shell cd ./tests && ls -d test_*)
+
+
+.PHONY: $(TESTS)
+$(TESTS):
+	$(MAKE) -C ./tests $@
+
+
+
+.PHONY: all_tests
+all_tests:
+	$(MAKE) -C ./tests all
+
 
