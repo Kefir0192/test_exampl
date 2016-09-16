@@ -18,6 +18,9 @@
 
 9. [Основные понятия планирования процессов](https://moodle.kstu.ru/mod/page/view.php?id=55)
 
+10. [Цикл статей. Assembler, переключение контекста TNKernel](http://badembed.ru/assembler-pereklyuchenie-konteksta/)
+
+
 
 ## FreeRTOS:
 
