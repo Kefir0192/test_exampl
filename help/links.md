@@ -56,9 +56,11 @@
 
 ## Лайфхаки:
 
-1. [Применение специальных возможностей GCC в ядре Linux](http://www.ibm.com/developerworks/ru/library/l-gcc-hacks/)
+1. [Применение специальных возможностей GCC в ядре Linux](http://qmlbook.github.io)
 
-
+## Qt:
+1. [A Book about Qt5](http://www.ibm.com/developerworks/ru/library/l-gcc-hacks/)
+1.1 [The source code for the upcoming qml book](https://github.com/qmlbook/qmlbook)
 
 ## Список литературы:
 
