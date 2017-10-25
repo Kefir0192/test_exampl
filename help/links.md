@@ -22,6 +22,8 @@
 
 11. [Блокировки работают не так уж медленно](https://habrahabr.ru/company/infopulse/blog/311134/)
 
+12. [Альтернативные аллокаторы памяти](https://habrahabr.ru/post/274827/)
+
 
 
 ## FreeRTOS:
